@@ -1,19 +1,25 @@
 import { SetOptions, createClient } from 'redis';
-import logger from './logger';
+// import logger from './logger';
 import config from '../config';
 
 const redisClient = createClient({
-  url: config.redis.url
+  url: config.redis.url,
 });
 
-redisClient.on('error', (err) => logger.error('RedisError', err));
-redisClient.on('connect', (err) => logger.info('Redis connected'));
+// redisClient.on('error', err => logger.error('RedisError', err));
+// redisClient.on('connect', (err) => logger.info('Redis connected'));
+redisClient.on('error', err => console.log('RedisError', err));
+redisClient.on('connect', err => console.log('Redis connected'));
 
 const connect = async (): Promise<void> => {
   await redisClient.connect();
 };
 
-const set = async (key: string, val: string, options?: SetOptions): Promise<void> => {
+const set = async (
+  key: string,
+  val: string,
+  options?: SetOptions
+): Promise<void> => {
   await redisClient.set(key, val, options);
 };
 
@@ -49,5 +55,5 @@ export const RedisClient = {
   delAccessToken,
   publish: redisClient.publish.bind(redisClient),
   subscribe: redisClient.subscribe.bind(redisClient),
-  unsubscribe: redisClient.unsubscribe.bind(redisClient)
+  unsubscribe: redisClient.unsubscribe.bind(redisClient),
 };

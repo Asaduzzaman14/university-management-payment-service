@@ -16,16 +16,16 @@ app.use('/api/v1', routes);
 
 app.use(globalExceptionHandler);
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,
     message: 'API not found',
     errorMessages: [
       {
         path: '',
-        message: 'API not found'
-      }
-    ]
+        message: 'API not found',
+      },
+    ],
   });
 });
 

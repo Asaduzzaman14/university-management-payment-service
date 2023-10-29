@@ -37,13 +37,30 @@ const initPayment = async (paylode: any) => {
       ship_country: 'Bangladesh',
     };
 
-    const responst = await axios({
+    const response = await axios({
       method: 'post',
       url: config.ssl.sslPaymentUrl,
       data: data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
-    console.log(responst);
+    console.log(response?.data);
+
+    return response.data;
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Payment error');
+  }
+};
+
+const validate = async (data: any) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${config.ssl.sslValidationUrl}?val_id=${data.val_id}&store_id${config.ssl.storeId}&store_passwd${config.ssl.storePass}&format=json`,
+      data: data,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+
+    return response;
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Payment error');
   }
@@ -51,4 +68,5 @@ const initPayment = async (paylode: any) => {
 
 export const sslService = {
   initPayment,
+  validate,
 };
